@@ -1,13 +1,20 @@
 
 const http = require('http');
-
+const users = require('./mocks/users');
 
 const server = http.createServer((request, response) => {
-    console.log(`Request method. ${request.method} | Endpoint: ${request.url}`);
+    console.log(`Request method: ${request.method} | Endpoint: ${request.url}`);
 
-    response.writeHead(200, {'Content-Type': 'text/html'});
+    if(request.url == '/users' && request.method == 'GET') {
+        response.writeHead(200, {'Content-Type': 'application/json'});
+        
+        response.end(JSON.stringify(users));
 
-    response.end('<h1> Ola, mundo!</h1>');
+    }
+    else {
+        response.writeHead(404, {'Content-Type': 'application/json'})
+        response.end(`Cannot ${request.method} ${request.url}`)
+    }
 });
 
 server.listen(8080, () => console.log('Server started at http://localhost:8080'))
